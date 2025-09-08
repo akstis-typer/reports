@@ -104,17 +104,10 @@ if ($crit == 5) { // Search Duplicate IP Address - From glpi_networking_ports
    $IPBlacklist = "A_ipa.`name` != ''
                    AND A_ipa.`name` != '0.0.0.0'";
    if(Plugin::isPluginActive(PLUGIN_IVCINVENTORYHANDLER_PLUGIN_ID)){
-      $virtualDevices = $DB->request(['FROM' => PluginIvcinventoryhandlerVirtualDevice::getTable(), 'WHERE' => ['is_virtual' => 1]]);
-      $ipadresses = $DB->request(['FROM' => "glpi_ipaddresses"]);
+      $virtualDevices = $DB->request(['FROM' => PluginIvcinventoryhandlerVirtualIP::getTable(), 'WHERE' => ['is_virtual' => 1]]);
       foreach ($virtualDevices as $id => $row) {
-         foreach ($ipadresses as $ip_id => $ip_row) {
-            PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Trying adding this ipaddress to ignore", $ip_row);
-            if($ip_row['items_id'] === $row['glpi_networkports_id']) {
-               $IPBlacklist .= "," . $ip_row['name'] . " ";
-               PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Adding this network_port to ignore", $row);
-               PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Adding this ipaddress to ignore", $ip_row);
-            }
-         }
+         $IPBlacklist .= "," . $row['ip'] . " ";
+         PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Adding this network_port to ignore", $row);     
       }
    }
    $res  =$DB->query("SELECT `value`
