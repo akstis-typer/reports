@@ -162,11 +162,12 @@ if ($crit == 5) { // Search Duplicate IP Address - From glpi_networking_ports
 
 } else if ($crit == 4) { // Search Duplicate Mac Address - From glpi_computer_device
    $MacBlacklist = "''";
-   
+
    if(Plugin::isPluginActive(PLUGIN_IVCINVENTORYHANDLER_PLUGIN_ID)){
       $req = $DB->request(['FROM' => PluginIvcinventoryhandlerVirtualDevice::getTable(), 'WHERE' => ['is_virtual' => 1]]);
       foreach ($req as $id => $row) {
          $MacBlacklist .= "," . $row['mac'] . " ";
+         PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Adding this macaddress to ignore", $row);
       }
    }
    $res = $DB->query("SELECT `value`
