@@ -106,7 +106,7 @@ if ($crit == 5) { // Search Duplicate IP Address - From glpi_networking_ports
    if(Plugin::isPluginActive(PLUGIN_IVCINVENTORYHANDLER_PLUGIN_ID)){
       $virtualDevices = $DB->request(['FROM' => PluginIvcinventoryhandlerVirtualIP::getTable(), 'WHERE' => ['is_virtual' => 1]]);
       foreach ($virtualDevices as $id => $row) {
-         $IPBlacklist .= "," . $row['ip'] . " ";
+         $IPBlacklist .= " AND A_ipa.`name` NOT LIKE '".addslashes($row['ip'])."'";
          PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Adding this network_port to ignore", $row);     
       }
    }
@@ -172,7 +172,7 @@ if ($crit == 5) { // Search Duplicate IP Address - From glpi_networking_ports
    if(Plugin::isPluginActive(PLUGIN_IVCINVENTORYHANDLER_PLUGIN_ID)){
       $req = $DB->request(['FROM' => PluginIvcinventoryhandlerVirtualDevice::getTable(), 'WHERE' => ['is_virtual' => 1]]);
       foreach ($req as $id => $row) {
-         $MacBlacklist .= "," . $row['mac'] . " ";
+         $MacBlacklist .= ",'".addslashes($row["mac"])."'";
          PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Adding this macaddress to ignore", $row);
       }
    }
