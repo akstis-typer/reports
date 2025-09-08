@@ -108,11 +108,11 @@ if ($crit == 5) { // Search Duplicate IP Address - From glpi_networking_ports
       $ipadresses = $DB->request(['FROM' => "glpi_ipaddresses"]);
       foreach ($virtualDevices as $id => $row) {
          foreach ($ipadresses as $ip_id => $ip_row) {
-            if($ip_row['items_id'] === $row['glpi_networkports_id'])
-               {
-                  $IPBlacklist .= "," . $ip_row['name'] . " ";
-                  PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Adding this network_port to ignore", $row);
-                  PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Adding this ipaddress to ignore", $ip_row);
+            PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Trying adding this ipaddress to ignore", $ip_row);
+            if($ip_row['items_id'] === $row['glpi_networkports_id']) {
+               $IPBlacklist .= "," . $ip_row['name'] . " ";
+               PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Adding this network_port to ignore", $row);
+               PluginIvcinventoryhandlerInventoryHandler::debugLogItem("Adding this ipaddress to ignore", $ip_row);
             }
          }
       }
