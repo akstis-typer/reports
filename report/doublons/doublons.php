@@ -103,7 +103,7 @@ Html::closeForm();
 if ($crit == 5) { // Search Duplicate IP Address - From glpi_networking_ports
    $IPBlacklist = "A_ipa.`name` != ''
                    AND A_ipa.`name` != '0.0.0.0'";
-   if(Plugin::isPluginActive(PLUGIN_IVCINVENTORYHANDLER_PLUGIN_ID)){
+   if(Plugin::isPluginLoaded(PLUGIN_IVCINVENTORYHANDLER_PLUGIN_ID) && Plugin::isPluginActive(PLUGIN_IVCINVENTORYHANDLER_PLUGIN_ID)){
       $virtualDevices = $DB->request(['FROM' => PluginIvcinventoryhandlerVirtualIP::getTable(), 'WHERE' => ['is_virtual' => 1]]);
       foreach ($virtualDevices as $id => $row) {
          $IPBlacklist .= " AND A_ipa.`name` NOT LIKE '".addslashes($row['ip'])."'";
@@ -169,7 +169,7 @@ if ($crit == 5) { // Search Duplicate IP Address - From glpi_networking_ports
 } else if ($crit == 4) { // Search Duplicate Mac Address - From glpi_computer_device
    $MacBlacklist = "''";
 
-   if(Plugin::isPluginActive(PLUGIN_IVCINVENTORYHANDLER_PLUGIN_ID)){
+   if(Plugin::isPluginLoaded(PLUGIN_IVCINVENTORYHANDLER_PLUGIN_ID) && Plugin::isPluginActive(PLUGIN_IVCINVENTORYHANDLER_PLUGIN_ID)){
       $req = $DB->request(['FROM' => PluginIvcinventoryhandlerVirtualDevice::getTable(), 'WHERE' => ['is_virtual' => 1]]);
       foreach ($req as $id => $row) {
          $MacBlacklist .= ",'".addslashes($row["mac"])."'";
